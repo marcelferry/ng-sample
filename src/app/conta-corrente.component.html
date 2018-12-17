@@ -1,0 +1,96 @@
+<h1>Angular CRUD</h1>
+<h3 *ngIf="contaCorrenteIdToUpdate; else create"> 
+  Editar Conta Corrente Id: {{contaCorrenteIdToUpdate}}
+</h3>
+<ng-template #create>
+  <h3>Criação de conta corrente </h3>
+</ng-template>
+<div>
+  <form [formGroup]="contaCorrenteForm" (ngSubmit)="onContaCorrenteFormSubmit()">
+    <table>
+      <tr>
+        <td>Instituição Financeira:</td>
+        <td>
+          <select formControlName="instituicaoId" style="width: 300px">
+            <option *ngFor="let instituicao of instituicoes" [ngValue]="instituicao.id">
+              {{instituicao.codigo}} - {{instituicao.descricao}}
+            </option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Tipo Conta:</td>
+        <td>
+          <select formControlName="tipoContaId" style="width: 300px">
+            <option *ngFor="let tipoConta of tiposConta" [ngValue]="tipoConta.id">
+              {{tipoConta.descricao}}
+            </option>
+          </select>  
+        </td>
+      </tr>	
+      <tr>
+        <td>Agência:</td>
+        <td>
+          <input formControlName="agencia">
+          <label *ngIf="contaCorrenteForm.get('agencia').invalid && processValidation" [ngClass] = "'error'"> Agência obrigatória. </label>
+        </td>
+      </tr>
+      <tr>
+        <td>Conta:</td>
+        <td>
+          <input formControlName="conta">
+          <label *ngIf="contaCorrenteForm.get('conta').invalid && processValidation" [ngClass] = "'error'"> Conta obrigatória. </label>
+        </td>
+      </tr>
+      <tr>
+        <td>Descrição:</td>
+        <td>
+          <input formControlName="descricao">
+          <label *ngIf="contaCorrenteForm.get('descricao').invalid && processValidation" [ngClass] = "'error'"> Descrição obrigatória. </label>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <button *ngIf="!contaCorrenteIdToUpdate">Adicionar</button>  
+          <button *ngIf="contaCorrenteIdToUpdate">Alterar</button>  
+        </td>
+      </tr>
+    </table>
+   </form> 
+   <br/>
+   <div *ngIf="statusCode; else processing">
+      <div *ngIf="statusCode === 201" [ngClass] = "'success'">
+        Conta Corrente adicionada com sucesso.
+      </div>   
+      <div *ngIf="statusCode === 409" [ngClass] = "'success'">
+        Conta Corrente existente.
+      </div>   	
+      <div *ngIf="statusCode === 200" [ngClass] = "'success'">
+        Conta Corrente atualizada com sucesso.
+      </div>   	      
+      <div *ngIf="statusCode === 204" [ngClass] = "'success'">
+        Conta Corrente deletada com sucesso.
+      </div>   	   
+      <div *ngIf="statusCode === 500" [ngClass] = "'error'">
+        Internal Server Error.
+      </div>	
+    </div>
+    <ng-template #processing>
+      <img *ngIf="requestProcessing" src="assets/images/loading.gif">
+    </ng-template>
+</div>
+
+<h3>Contas Corrente Cadastradas</h3>
+<table>
+  <tr><th>Id</th><th>Instituição</th><th>Tipo Conta</th><th>Agência</th><th>Conta</th><th>Descrição</th><th></th><th></th></tr>
+  <tr *ngFor="let contaCorrente of contasCorrente">
+    <td>{{contaCorrente.id}}</td> 
+    <td>{{contaCorrente.instituicaoId}}</td> 
+    <td>{{contaCorrente.tipoContaId}}</td>
+    <td>{{contaCorrente.agencia}}</td>
+    <td>{{contaCorrente.conta}}</td>
+    <td>{{contaCorrente.descricao}}</td>
+    <td><button type="button" (click)="loadContaCorrenteToEdit(contaCorrente.id)">Editar</button></td> 
+    <td><button type="button" (click)="deleteContaCorrente(contaCorrente.id)">Deletar</button></td>
+  </tr>
+</table>

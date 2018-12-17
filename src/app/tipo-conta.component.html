@@ -1,0 +1,58 @@
+<h1>Angular CRUD</h1>
+<h3 *ngIf="tipoContaIdToUpdate; else create"> 
+  Editar Conta Corrente Id: {{tipoContaIdToUpdate}}
+</h3>
+<ng-template #create>
+  <h3>Criação de conta corrente </h3>
+</ng-template>
+<div>
+  <form [formGroup]="tipoContaForm" (ngSubmit)="onTipoContaFormSubmit()">
+    <table>
+      <tr>
+        <td>Descrição:</td>
+        <td>
+          <input formControlName="descricao">
+          <label *ngIf="tipoContaForm.get('descricao').invalid && processValidation" [ngClass] = "'error'"> Descrição obrigatória. </label>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <button *ngIf="!tipoContaIdToUpdate">Adicionar</button>  
+          <button *ngIf="tipoContaIdToUpdate">Alterar</button>  
+        </td>
+      </tr>
+    </table>
+   </form> 
+   <br/>
+   <div *ngIf="statusCode; else processing">
+      <div *ngIf="statusCode === 201" [ngClass] = "'success'">
+        Conta Corrente adicionada com sucesso.
+      </div>   
+      <div *ngIf="statusCode === 409" [ngClass] = "'success'">
+        Conta Corrente existente.
+      </div>   	
+      <div *ngIf="statusCode === 200" [ngClass] = "'success'">
+        Conta Corrente atualizada com sucesso.
+      </div>   	      
+      <div *ngIf="statusCode === 204" [ngClass] = "'success'">
+        Conta Corrente deletada com sucesso.
+      </div>   	   
+      <div *ngIf="statusCode === 500" [ngClass] = "'error'">
+        Internal Server Error.
+      </div>	
+    </div>
+    <ng-template #processing>
+      <img *ngIf="requestProcessing" src="assets/images/loading.gif">
+    </ng-template>
+</div>
+
+<h3>Tipo Contas Cadastradas</h3>
+<table>
+  <tr><th>Id</th><th>Descrição</th><th></th><th></th></tr>
+  <tr *ngFor="let tipoConta of contasCorrente">
+    <td>{{tipoConta.id}}</td> 
+    <td>{{tipoConta.descricao}}</td>
+    <td><button type="button" (click)="loadTipoContaToEdit(tipoConta.id)">Editar</button></td> 
+    <td><button type="button" (click)="deleteTipoConta(tipoConta.id)">Deletar</button></td>
+  </tr>
+</table>

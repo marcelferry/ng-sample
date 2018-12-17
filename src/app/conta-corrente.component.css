@@ -1,0 +1,26 @@
+*{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+h1 {
+    font-size: 2.0em;
+    margin: 20px 0 0 0;
+    font-weight: 400;   
+}
+input {
+    width: 295px;
+}
+.error{
+    color: red;
+    font-size: 20px;
+}
+.success{
+    color: green;
+    font-size: 20px;
+}
+table {
+    border-collapse: collapse;
+}
+table, th, td {
+    border: 1px solid black;
+	font-size:17px;
+}
